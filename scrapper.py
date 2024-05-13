@@ -12,7 +12,7 @@ def scrape_quotes(url):
     quotes = []
     for quote in soup.select('.quote'):
         text = quote.select_one('.text').get_text()
-        author = quote.select_one('author').get_text()
+        author = quote.select_one('.author').get_text()
         tags = [tag.get_text() for tag in quote.select('.tag')]
         quotes.append({
             'quote': text,
@@ -38,8 +38,6 @@ def scrape_authors(url):
         })
     return authors
 
-
-
 def main():
     url = 'https://quotes.toscrape.com/'
     quotes_url = f'{url}/page/1'
@@ -50,10 +48,10 @@ def main():
         quotes_url = f'{url}/page/{page}'
         all_quotes.extend(scrape_quotes(quotes_url))
 
-        with open('quotes.json', 'w') as f:
-            json.dump(all_quotes, f, indent=2, ensure_ascii=False)
-            return('Quotes data saved to json file')
-        
+    with open('quotes.json', 'w') as f:
+        json.dump(all_quotes, f, indent=2, ensure_ascii=False)
+        print('Quotes data saved to json file')
+
     all_authors = []
     for quote in all_quotes:
         all_authors.append(quote['author'])
@@ -64,7 +62,7 @@ def main():
 
     with open('authors.json', 'w') as f:
         json.dump(all_authors, f, indent=2, ensure_ascii=False)
-    return('Authors data saved to json file')
+    print('Authors data saved to json file')
 
 if __name__ == "__main__":
     main()
